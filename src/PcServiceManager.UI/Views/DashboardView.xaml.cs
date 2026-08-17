@@ -5,9 +5,13 @@ namespace PcServiceManager.UI.Views;
 
 public partial class DashboardView : UserControl
 {
-    public DashboardView(DashboardViewModel viewModel)
+    public DashboardView()
     {
         InitializeComponent();
+    }
+
+    public DashboardView(DashboardViewModel viewModel) : this()
+    {
         DataContext = viewModel;
     }
 }

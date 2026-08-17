@@ -5,9 +5,13 @@ namespace PcServiceManager.UI.Views;
 
 public partial class PcInfoView : UserControl
 {
-    public PcInfoView(PcInfoViewModel viewModel)
+    public PcInfoView()
     {
         InitializeComponent();
+    }
+
+    public PcInfoView(PcInfoViewModel viewModel) : this()
+    {
         DataContext = viewModel;
     }
 }

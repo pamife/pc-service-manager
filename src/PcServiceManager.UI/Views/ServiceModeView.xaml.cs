@@ -5,9 +5,13 @@ namespace PcServiceManager.UI.Views;
 
 public partial class ServiceModeView : UserControl
 {
-    public ServiceModeView(ServiceModeViewModel viewModel)
+    public ServiceModeView()
     {
         InitializeComponent();
+    }
+
+    public ServiceModeView(ServiceModeViewModel viewModel) : this()
+    {
         DataContext = viewModel;
     }
 }

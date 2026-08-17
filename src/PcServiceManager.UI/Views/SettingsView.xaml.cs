@@ -5,9 +5,13 @@ namespace PcServiceManager.UI.Views;
 
 public partial class SettingsView : UserControl
 {
-    public SettingsView(SettingsViewModel viewModel)
+    public SettingsView()
     {
         InitializeComponent();
+    }
+
+    public SettingsView(SettingsViewModel viewModel) : this()
+    {
         DataContext = viewModel;
     }
 }

@@ -5,9 +5,13 @@ namespace PcServiceManager.UI.Views;
 
 public partial class FirstLaunchWizardView : UserControl
 {
-    public FirstLaunchWizardView(FirstLaunchWizardViewModel viewModel)
+    public FirstLaunchWizardView()
     {
         InitializeComponent();
+    }
+
+    public FirstLaunchWizardView(FirstLaunchWizardViewModel viewModel) : this()
+    {
         DataContext = viewModel;
     }
 }

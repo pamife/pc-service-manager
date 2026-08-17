@@ -5,9 +5,13 @@ namespace PcServiceManager.UI.Views;
 
 public partial class MaintenanceView : UserControl
 {
-    public MaintenanceView(MaintenanceViewModel viewModel)
+    public MaintenanceView()
     {
         InitializeComponent();
+    }
+
+    public MaintenanceView(MaintenanceViewModel viewModel) : this()
+    {
         DataContext = viewModel;
     }
 }
