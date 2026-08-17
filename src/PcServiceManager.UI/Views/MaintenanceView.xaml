@@ -1,0 +1,253 @@
+<UserControl x:Class="PcServiceManager.UI.Views.MaintenanceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:converters="clr-namespace:PcServiceManager.UI.Converters"
+             xmlns:enums="clr-namespace:PcServiceManager.Core.Enums;assembly=PcServiceManager.Core"
+             mc:Ignorable="d" 
+             d:DesignHeight="900" d:DesignWidth="1100">
+    <UserControl.Resources>
+        <converters:StatusToBrushConverter x:Key="StatusToBrushConverter"/>
+        <converters:StatusToBackgroundBrushConverter x:Key="StatusToBackgroundBrushConverter"/>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:NullToVisibilityConverter x:Key="NullToVis"/>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="28,24,28,32">
+        <StackPanel MaxWidth="1200" HorizontalAlignment="Stretch">
+
+            <!-- Header Controls -->
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Search Box -->
+                <ui:TextBox Grid.Column="0" 
+                         Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" 
+                         PlaceholderText="Search maintenance tasks..." 
+                         Height="38" 
+                         Margin="0,0,16,0" 
+                         VerticalContentAlignment="Center"/>
+
+                <!-- Category Filter Combo -->
+                <ComboBox Grid.Column="1" 
+                          ItemsSource="{Binding Categories}" 
+                          SelectedItem="{Binding SelectedCategory}" 
+                          DisplayMemberPath="Name" 
+                          Width="220" 
+                          Height="38" 
+                          Margin="0,0,16,0" 
+                          VerticalContentAlignment="Center"/>
+
+                <!-- Add Task Button -->
+                <ui:Button Grid.Column="2" 
+                        Command="{Binding ShowAddTaskFormCommand}" 
+                        Appearance="Primary" 
+                        Height="38" 
+                        Padding="16,0">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="Add24" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="Add Custom Task" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:Button>
+            </Grid>
+
+            <!-- Add Task Form Card (Collapsible) -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    BorderBrush="{DynamicResource AccentStrokeColorDefaultBrush}" 
+                    BorderThickness="1.5" CornerRadius="10" Padding="24" Margin="0,0,0,24"
+                    Visibility="{Binding IsAddingTask, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <TextBlock Text="Add New Maintenance Task" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,16"/>
+
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Task Title" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
+                            <ui:TextBox Text="{Binding NewTaskTitle, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="e.g. Inspect Liquid Cooling Loop" Height="36"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Category" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
+                            <ComboBox ItemsSource="{Binding Categories}" SelectedItem="{Binding NewTaskCategory}" DisplayMemberPath="Name" Height="36" HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Interval Value" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding NewTaskIntervalValue, UpdateSourceTrigger=PropertyChanged}" Height="36"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Interval Frequency" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
+                            <ComboBox SelectedItem="{Binding NewTaskIntervalType}" Height="36" HorizontalAlignment="Stretch">
+                                <enums:IntervalType>Days</enums:IntervalType>
+                                <enums:IntervalType>Weeks</enums:IntervalType>
+                                <enums:IntervalType>Months</enums:IntervalType>
+                                <enums:IntervalType>Years</enums:IntervalType>
+                                <enums:IntervalType>OneTime</enums:IntervalType>
+                                <enums:IntervalType>Disabled</enums:IntervalType>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Short Description" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
+                        <ui:TextBox Text="{Binding NewTaskDescription, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="Summary of what this task accomplishes" Height="36"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Detailed Step-by-Step Instructions" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
+                        <TextBox Text="{Binding NewTaskDetailedInstructions, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" Height="70" TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,0,0,12">
+                        <TextBlock Text="Safety Warning (Optional for advanced operations)" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,4"/>
+                        <ui:TextBox Text="{Binding NewTaskSafetyWarning, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="e.g. Disconnect power cord before opening chassis." Height="36"/>
+                    </StackPanel>
+
+                    <CheckBox IsChecked="{Binding NewTaskIsAdvanced}" Content="Mark as Advanced Task (Requires safety precaution badge)" Margin="0,0,0,16"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Cancel" Command="{Binding CancelAddTaskCommand}" Margin="0,0,10,0" Height="36" Padding="16,0"/>
+                        <ui:Button Content="Save Task" Command="{Binding SaveNewTaskCommand}" Appearance="Primary" Height="36" Padding="20,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Tasks List -->
+            <ItemsControl ItemsSource="{Binding FilteredTasks}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                                BorderThickness="1" CornerRadius="10" Padding="20" Margin="0,0,0,14">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- Top Row: Category, Status Badge, Due Date Countdown, Toggle -->
+                                <Grid Grid.Row="0" Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Category Pill -->
+                                    <Border Grid.Column="0" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="12" Padding="10,4" Margin="0,0,10,0">
+                                        <TextBlock Text="{Binding CategoryName}" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                    </Border>
+
+                                    <!-- Status Badge -->
+                                    <Border Grid.Column="1" HorizontalAlignment="Left"
+                                            Background="{Binding Status, Converter={StaticResource StatusToBackgroundBrushConverter}}" 
+                                            BorderBrush="{Binding Status, Converter={StaticResource StatusToBrushConverter}}" 
+                                            BorderThickness="1" CornerRadius="12" Padding="10,4">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="7" Height="7" Fill="{Binding Status, Converter={StaticResource StatusToBrushConverter}}" Margin="0,0,6,0"/>
+                                            <TextBlock Text="{Binding FormattedDaysRemaining}" FontSize="11" FontWeight="SemiBold" Foreground="{Binding Status, Converter={StaticResource StatusToBrushConverter}}"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Frequency Badge & Interval -->
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding FormattedInterval}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                        <ui:ToggleSwitch IsChecked="{Binding IsEnabled}" Command="{Binding DataContext.ToggleTaskEnabledCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Task Title & Description -->
+                                <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                                    <TextBlock Text="{Binding Title}" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                    <TextBlock Text="{Binding Description}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <!-- Safety Warning Box if Advanced -->
+                                <Border Grid.Row="2" 
+                                        Background="#20EF4444" 
+                                        BorderBrush="#EF4444" 
+                                        BorderThickness="1" 
+                                        CornerRadius="6" 
+                                        Padding="12,10" 
+                                        Margin="0,0,0,12"
+                                        Visibility="{Binding SafetyWarning, Converter={StaticResource NullToVis}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <ui:SymbolIcon Symbol="Warning24" Foreground="#EF4444" FontSize="18" Margin="0,0,10,0" VerticalAlignment="Top"/>
+                                        <StackPanel>
+                                            <TextBlock Text="SAFETY ADVISORY (ADVANCED PROCEDURE)" FontSize="11" FontWeight="Bold" Foreground="#EF4444" Margin="0,0,0,2"/>
+                                            <TextBlock Text="{Binding SafetyWarning}" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Bottom Row: Metadata Dates & Action Buttons -->
+                                <Grid Grid.Row="3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <TextBlock Text="Last Performed: " FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{Binding FormattedLastPerformed}" FontSize="12" FontWeight="SemiBold" Margin="0,0,16,0"/>
+
+                                        <TextBlock Text="Next Due: " FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{Binding FormattedNextDue}" FontSize="12" FontWeight="SemiBold"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                        <!-- Quick Action Button -->
+                                        <ui:Button Command="{Binding ExecuteQuickActionCommand}" 
+                                                Visibility="{Binding HasQuickAction, Converter={StaticResource BoolToVis}}" 
+                                                Appearance="Secondary" 
+                                                Height="32" 
+                                                Padding="12,0" 
+                                                Margin="0,0,8,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <ui:SymbolIcon Symbol="Open24" FontSize="13" Margin="0,0,6,0"/>
+                                                <TextBlock Text="{Binding QuickActionLabel}" FontSize="12"/>
+                                            </StackPanel>
+                                        </ui:Button>
+
+                                        <!-- Delete Task Button -->
+                                        <ui:Button Command="{Binding DataContext.DeleteTaskCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                CommandParameter="{Binding}" 
+                                                Appearance="Transparent" 
+                                                Height="32" 
+                                                Padding="8,0">
+                                            <ui:SymbolIcon Symbol="Delete24" FontSize="14" Foreground="#EF4444"/>
+                                        </ui:Button>
+                                    </StackPanel>
+                                </Grid>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

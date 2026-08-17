@@ -1,0 +1,38 @@
+## Visual Studio / .NET
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+
+## Build Artifacts
+*.nupkg
+*.snupkg
+project.lock.json
+project.assets.json
+*.nuget.props
+*.nuget.targets
+
+## SQLite Local Databases & Temp Files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+## OS Generated Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+## IDEs
+.idea/
+.vscode/
+*.swp
+*~

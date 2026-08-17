@@ -1,0 +1,324 @@
+<UserControl x:Class="PcServiceManager.UI.Views.PcInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:converters="clr-namespace:PcServiceManager.UI.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="950" d:DesignWidth="1100">
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVis"/>
+        <converters:NullToVisibilityConverter x:Key="NullToVis"/>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="28,24,28,32">
+        <StackPanel MaxWidth="1200" HorizontalAlignment="Stretch">
+
+            <!-- Header -->
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="PC Information &amp; Diagnostics" FontSize="26" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                    <TextBlock Text="Safely detected hardware specifications, storage metrics, and Windows system tools." FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                </StackPanel>
+
+                <ui:Button Grid.Column="1" Command="{Binding RefreshDiagnosticsCommand}" Appearance="Secondary" Height="38">
+                    <StackPanel Orientation="Horizontal">
+                        <ui:SymbolIcon Symbol="ArrowClockwise24" FontSize="16" Margin="0,0,8,0"/>
+                        <TextBlock Text="Refresh Specs" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ui:Button>
+            </Grid>
+
+            <!-- Hardware Specifications Card -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                    BorderThickness="1" CornerRadius="10" Padding="24" Margin="0,0,0,24">
+                <StackPanel>
+                    <TextBlock Text="Hardware &amp; System Overview" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,16"/>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Row 0: OS & CPU -->
+                        <Border Grid.Row="0" Grid.Column="0" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="14,10">
+                            <StackPanel>
+                                <TextBlock Text="OPERATING SYSTEM" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{Binding DiagnosticInfo.OsVersion}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding DiagnosticInfo.OsArchitecture, StringFormat='{}Architecture: {0}'}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="0" Grid.Column="2" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="14,10">
+                            <StackPanel>
+                                <TextBlock Text="PROCESSOR (CPU)" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{Binding DiagnosticInfo.CpuName}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding DiagnosticInfo.CpuLogicalCores, StringFormat='{}Logical Threads: {0}'}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Row 2: RAM & GPU -->
+                        <Border Grid.Row="2" Grid.Column="0" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="14,10">
+                            <StackPanel>
+                                <TextBlock Text="PHYSICAL MEMORY (RAM)" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{Binding DiagnosticInfo.TotalRam}" FontSize="14" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="2" Grid.Column="2" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="14,10">
+                            <StackPanel>
+                                <TextBlock Text="GRAPHICS ADAPTER (GPU)" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{Binding DiagnosticInfo.GpuName}" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Row 4: Motherboard & BIOS -->
+                        <Border Grid.Row="4" Grid.Column="0" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="14,10">
+                            <StackPanel>
+                                <TextBlock Text="MOTHERBOARD" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{Binding DiagnosticInfo.Motherboard}" FontSize="14" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="4" Grid.Column="2" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="14,10">
+                            <StackPanel>
+                                <TextBlock Text="BIOS VERSION" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{Binding DiagnosticInfo.BiosVersion}" FontSize="14" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Row 6: Hostname & Uptime -->
+                        <Border Grid.Row="6" Grid.Column="0" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="14,10">
+                            <StackPanel>
+                                <TextBlock Text="HOST / MACHINE NAME" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{Binding DiagnosticInfo.MachineName}" FontSize="14" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Row="6" Grid.Column="2" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="14,10">
+                            <StackPanel>
+                                <TextBlock Text="SYSTEM UPTIME" FontSize="10" FontWeight="Bold" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="{Binding DiagnosticInfo.FormattedUptime}" FontSize="14" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Storage Drives Card -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                    BorderThickness="1" CornerRadius="10" Padding="24" Margin="0,0,0,24">
+                <StackPanel>
+                    <TextBlock Text="Storage Drives &amp; Capacity" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,16"/>
+
+                    <ItemsControl ItemsSource="{Binding DiagnosticInfo.Drives}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8" Padding="16" Margin="0,0,0,12">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid Grid.Row="0" Margin="0,0,0,8">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <ui:SymbolIcon Symbol="Storage24" FontSize="18" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Margin="0,0,8,0"/>
+                                                <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
+                                                <TextBlock Text="{Binding VolumeLabel, StringFormat='{} - {0}'}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                                                <TextBlock Text="{Binding DriveFormat, StringFormat='{} ({0})'}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="4,0,0,0"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding FreeSpaceGb, StringFormat='{}{0} GB free'}" FontWeight="SemiBold" FontSize="13"/>
+                                                <TextBlock Text="{Binding TotalSizeGb, StringFormat='{} of {0} GB'}" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="4,0,0,0"/>
+                                                <TextBlock Text="{Binding UsedPercent, StringFormat='{} ({0}%)'}" FontSize="12" FontWeight="SemiBold" Margin="6,0,0,0"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <!-- Usage Progress Bar -->
+                                        <ProgressBar Grid.Row="1" Value="{Binding UsedPercent}" Maximum="100" Height="8">
+                                            <ProgressBar.Style>
+                                                <Style TargetType="ProgressBar" BasedOn="{StaticResource {x:Type ProgressBar}}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsLowSpace}" Value="True">
+                                                            <Setter Property="Foreground" Value="#EF4444"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ProgressBar.Style>
+                                        </ProgressBar>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Safe Windows Management Tools Grid -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                    BorderThickness="1" CornerRadius="10" Padding="24" Margin="0,0,0,24">
+                <StackPanel>
+                    <TextBlock Text="Safe Windows Diagnostics &amp; Tools" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                    <TextBlock Text="Direct shortcuts to standard Windows administration consoles for quick inspection." FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,16"/>
+
+                    <WrapPanel Margin="-6">
+                        <ui:Button Command="{Binding LaunchToolCommand}" CommandParameter="WindowsUpdate" Margin="6" Height="40" Padding="14,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="ArrowSync24" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Windows Update" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ui:Button>
+
+                        <ui:Button Command="{Binding LaunchToolCommand}" CommandParameter="WindowsSecurity" Margin="6" Height="40" Padding="14,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Shield24" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Windows Security" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ui:Button>
+
+                        <ui:Button Command="{Binding LaunchToolCommand}" CommandParameter="TaskManager" Margin="6" Height="40" Padding="14,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="AppsList24" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Task Manager" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ui:Button>
+
+                        <ui:Button Command="{Binding LaunchToolCommand}" CommandParameter="DeviceManager" Margin="6" Height="40" Padding="14,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="DesktopSpeaker24" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Device Manager" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ui:Button>
+
+                        <ui:Button Command="{Binding LaunchToolCommand}" CommandParameter="ResourceMonitor" Margin="6" Height="40" Padding="14,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="DataBarHorizontal24" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Resource Monitor" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ui:Button>
+
+                        <ui:Button Command="{Binding LaunchToolCommand}" CommandParameter="StorageSense" Margin="6" Height="40" Padding="14,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Storage24" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Storage Settings" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ui:Button>
+
+                        <ui:Button Command="{Binding LaunchToolCommand}" CommandParameter="DiskManagement" Margin="6" Height="40" Padding="14,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Folder24" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Disk Management" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ui:Button>
+
+                        <ui:Button Command="{Binding LaunchToolCommand}" CommandParameter="EventViewer" Margin="6" Height="40" Padding="14,0">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="DocumentBulletList24" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Event Viewer" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ui:Button>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Safe Temporary Files Scanner & Cleaner Card -->
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                    BorderThickness="1" CornerRadius="10" Padding="24">
+                <StackPanel>
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Safe Temporary Files Scanner" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                            <TextBlock Text="Non-destructive scanner that finds safe user temp caches and crash dumps for optional cleaning." FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
+
+                        <ui:Button Grid.Column="1" Command="{Binding ScanTempFilesCommand}" Appearance="Secondary" Height="38">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="Search24" FontSize="16" Margin="0,0,8,0"/>
+                                <TextBlock Text="Scan Temp Files" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ui:Button>
+                    </Grid>
+
+                    <!-- Status / Feedback -->
+                    <TextBlock Text="{Binding TempCleanStatusMessage}" FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource AccentTextFillColorPrimaryBrush}" Margin="0,0,0,12" Visibility="{Binding TempCleanStatusMessage, Converter={StaticResource NullToVis}}"/>
+
+                    <!-- Scanned Locations List -->
+                    <ItemsControl ItemsSource="{Binding TempScanResult.Locations}" Margin="0,0,0,16">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="6" Padding="12,8" Margin="0,0,0,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Description}" FontWeight="SemiBold" FontSize="13"/>
+                                            <TextBlock Text="{Binding Path}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                            <TextBlock Text="{Binding FormattedSize}" FontWeight="Bold" FontSize="13" HorizontalAlignment="Right"/>
+                                            <TextBlock Text="{Binding FileCount, StringFormat='{}{0} files'}" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Right"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Clean Button -->
+                    <ui:Button Command="{Binding CleanTempFilesCommand}" 
+                            Appearance="Primary" 
+                            Height="40" 
+                            HorizontalAlignment="Left" 
+                            Padding="20,0"
+                            Visibility="{Binding TempScanResult, Converter={StaticResource NullToVis}}">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="Delete24" FontSize="16" Margin="0,0,8,0"/>
+                            <TextBlock Text="Clean Selected Temp Files" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </ui:Button>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
