@@ -199,7 +199,21 @@ dotnet test
 ```
 
 ### Running the Application
+
+You can launch the application with the included helper script:
+
 ```powershell
+# In PowerShell:
+./run.ps1
+
+# Or in Windows CMD:
+run.cmd
+```
+
+Or manually using the installed .NET 8 SDK:
+
+```powershell
+$env:PATH = "$HOME\.dotnet;$env:PATH"
 dotnet run --project src/PcServiceManager.UI
 ```
 
