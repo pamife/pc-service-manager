@@ -10,6 +10,7 @@
 *.suo
 
 ## Build Artifacts
+publish/
 *.nupkg
 *.snupkg
 project.lock.json
